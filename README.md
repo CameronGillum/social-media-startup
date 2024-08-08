@@ -1,6 +1,7 @@
 # Social Media Startup
 
 ## Walkthrough
+https://github.com/user-attachments/assets/ef259e47-8de3-42f9-a702-f3cec3894e95
 
 ## Description
 A database using MongoDB to easily track, users, posts, reactions, and timestamp them

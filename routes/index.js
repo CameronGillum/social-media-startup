@@ -1,15 +1,8 @@
-const express = require('express');
-const app = express();
-const userRoutes = require('./routes/userRoutes');
-const thoughtRoutes = require('./routes/thoughtRoutes');
+const router = require('express').Router();
+const apiRoutes = require('./api');
 
-app.use(express.json());
+router.use('/api', apiRoutes);
 
-// Use the routes
-app.use('/users', userRoutes);
-app.use('/thoughts', thoughtRoutes);
+router.use((req, res) => res.send('Wrong Route!'));
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
+module.exports = router;

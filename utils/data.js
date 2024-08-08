@@ -2,12 +2,16 @@ const users = [
     {
         username: 'john_doe',
         email: 'john@example.com',
-        friendCount: 5
+        friendCount: 1,
+        friends: [], // This will be populated in seed.js
+        thoughts: [] // This will be populated in seed.js
     },
     {
         username: 'jane_doe',
         email: 'jane@example.com',
-        friendCount: 3
+        friendCount: 1,
+        friends: [], // This will be populated in seed.js
+        thoughts: [] // This will be populated in seed.js
     }
 ];
 

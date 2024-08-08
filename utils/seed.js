@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { User, Thought } = require('./models');
+const { User, Thought } = require('../models');
 const { users, thoughts } = require('./data');
 
 const seedDatabase = async () => {
@@ -11,9 +11,28 @@ const seedDatabase = async () => {
         await User.deleteMany({});
         await Thought.deleteMany({});
 
-        // Insert sample data
-        await User.insertMany(users);
-        await Thought.insertMany(thoughts);
+        // Insert users
+        const insertedUsers = await User.insertMany(users);
+
+        // Insert thoughts and update users with thought IDs
+        for (const thoughtData of thoughts) {
+            const thought = new Thought(thoughtData);
+            await thought.save();
+
+            const user = insertedUsers.find(user => user.username === thought.username);
+            user.thoughts.push(thought._id);
+            await user.save();
+        }
+
+        // Update friends field
+        const johnDoe = insertedUsers.find(user => user.username === 'john_doe');
+        const janeDoe = insertedUsers.find(user => user.username === 'jane_doe');
+
+        johnDoe.friends.push(janeDoe._id);
+        janeDoe.friends.push(johnDoe._id);
+
+        await johnDoe.save();
+        await janeDoe.save();
 
         console.log('Database seeded successfully');
         mongoose.connection.close();

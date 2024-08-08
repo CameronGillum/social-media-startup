@@ -4,7 +4,7 @@ module.exports = {
     // get all thoughts
     async getThoughts(req, res) {
         try {
-            const dbThoughtData = await Thought.find().populate('user');
+            const dbThoughtData = await Thought.find().populate('username');
             res.json(dbThoughtData);
         } catch (err) {
             console.log(err);
@@ -14,7 +14,7 @@ module.exports = {
     // get one thought by id
     async getSingleThought({ params }, res) {
         try {
-            const dbThoughtData = await Thought.findOne({ _id: params.id }).populate('user');
+            const dbThoughtData = await Thought.findOne({ _id: params.id }).populate('username');
             if (!dbThoughtData) {
                 res.status(404).json({ message: 'No thought found with this id!' });
                 return;
@@ -32,20 +32,22 @@ module.exports = {
             .catch(err => res.status(400).json(err));
     },
     // update a thought by id
-    updateThought({ params, body }, res) {
-        Thought.findOneAndUpdate(
+    async updateThought({ params, body }, res) {
+        try {
+            const dbThoughtData = await Thought.findOneAndUpdate(
             { _id: params.id },
             body,
             { new: true, runValidators: true }
         )
-            .then(dbThoughtData => {
-                if (!dbThoughtData) {
-                    res.status(404).json({ message: 'No thought found with this id!' });
-                    return;
-                }
-                res.json(dbThoughtData);
-            })
-            .catch(err => res.status(400).json(err));
+        if (!dbThoughtData) {
+            res.status(404).json({ message: 'No thought found with this id!' });
+            return;
+        }
+        res.json(dbThoughtData);
+        } catch (err) {
+            console.log(err);
+            res.status(500).json(err);
+        }
     },
     // delete a thought
     deleteThought({ params }, res) {
